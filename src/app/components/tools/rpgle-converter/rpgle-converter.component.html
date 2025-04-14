@@ -1,0 +1,84 @@
+<div class="tool-container">
+  <div class="tool-description">
+    <h3>RPGLE to Java Conversion</h3>
+    <p>Convert legacy AS400 RPGLE code to modern Spring Boot Java applications using AI.</p>
+  </div>
+  
+  <div class="conversion-form card" *ngIf="!conversionComplete">
+    <div class="card-body">
+      <h4>Upload RPGLE Code</h4>
+      <p>Select an RPGLE source file to convert to a Spring Boot application.</p>
+      
+      <div class="file-upload">
+        <input type="file" id="rpgleFile" class="file-input" (change)="onFileSelected($event)" accept=".rpgle,.txt">
+        <label for="rpgleFile" class="file-label">
+          <span class="file-button">Choose File</span>
+          <span class="file-name">{{fileName || 'No file chosen'}}</span>
+        </label>
+      </div>
+      
+      <button 
+        class="btn btn-primary mt-3" 
+        [disabled]="!fileName || isProcessing" 
+        (click)="convertRpgle()"
+      >
+        <span *ngIf="!isProcessing">Convert RPGLE to Spring Boot</span>
+        <span *ngIf="isProcessing">Processing...</span>
+      </button>
+    </div>
+  </div>
+  
+  <div class="conversion-results" *ngIf="isProcessing || conversionComplete">
+    <div class="progress-tracker">
+      <div class="progress-step" [ngClass]="{'active': parseResults, 'complete': parseResults?.status === 'success'}">
+        <div class="step-indicator">1</div>
+        <div class="step-content">
+          <h5>Parse RPGLE Code</h5>
+          <p *ngIf="parseResults">{{parseResults.message}}</p>
+          <div class="step-details" *ngIf="parseResults?.details">
+            <p>Identified {{parseResults.details.files}} file declarations, {{parseResults.details.dataStructures}} data structures, 
+               {{parseResults.details.procedures}} procedures, and {{parseResults.details.variables}} variables.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="progress-step" [ngClass]="{'active': businessLogicResults, 'complete': businessLogicResults?.status === 'success'}">
+        <div class="step-indicator">2</div>
+        <div class="step-content">
+          <h5>Extract Business Logic</h5>
+          <p *ngIf="businessLogicResults">{{businessLogicResults.message}}</p>
+          <div class="step-details" *ngIf="businessLogicResults?.details">
+            <p>Identified program purpose: {{businessLogicResults.details.purpose}}</p>
+            <p>Extracted {{businessLogicResults.details.rules}} business rules, {{businessLogicResults.details.validations}} validations, 
+               and {{businessLogicResults.details.relationships}} relationships.</p>
+            <button class="btn btn-secondary mt-2" (click)="downloadPdf()" *ngIf="businessLogicResults?.status === 'success'">
+              Download Business Logic (PDF)
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="progress-step" [ngClass]="{'active': springBootResults, 'complete': springBootResults?.status === 'success'}">
+        <div class="step-indicator">3</div>
+        <div class="step-content">
+          <h5>Generate Spring Boot Project</h5>
+          <p *ngIf="springBootResults">{{springBootResults.message}}</p>
+          <div class="step-details" *ngIf="springBootResults?.details">
+            <p>Generated {{springBootResults.details.controllers}} controllers, {{springBootResults.details.services}} services, 
+               {{springBootResults.details.repositories}} repositories, and {{springBootResults.details.entities}} entity classes.</p>
+            <p>Created {{springBootResults.details.tests}} unit tests for the application.</p>
+            <button class="btn btn-primary mt-2" (click)="downloadZip()" *ngIf="springBootResults?.status === 'success'">
+              Download Spring Boot Project (ZIP)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="conversion-actions mt-4" *ngIf="conversionComplete">
+      <button class="btn btn-secondary" (click)="resetForm()">
+        Start New Conversion
+      </button>
+    </div>
+  </div>
+</div>

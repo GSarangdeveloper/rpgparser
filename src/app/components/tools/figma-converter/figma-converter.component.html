@@ -1,0 +1,83 @@
+<div class="tool-container">
+  <div class="tool-description">
+    <h3>Figma to Angular Code Generation</h3>
+    <p>Convert Figma design files to Angular components using AI pattern recognition.</p>
+  </div>
+  
+  <div class="conversion-form card" *ngIf="!conversionComplete">
+    <div class="card-body">
+      <h4>Upload Figma JSON</h4>
+      <p>Export a design from Figma as JSON and upload it here to generate Angular components.</p>
+      
+      <div class="file-upload">
+        <input type="file" id="figmaFile" class="file-input" (change)="onFileSelected($event)" accept=".json">
+        <label for="figmaFile" class="file-label">
+          <span class="file-button">Choose File</span>
+          <span class="file-name">{{fileName || 'No file chosen'}}</span>
+        </label>
+      </div>
+      
+      <button 
+        class="btn btn-primary mt-3" 
+        [disabled]="!fileName || isProcessing" 
+        (click)="convertFigma()"
+      >
+        <span *ngIf="!isProcessing">Convert Figma to Angular</span>
+        <span *ngIf="isProcessing">Processing...</span>
+      </button>
+    </div>
+  </div>
+  
+  <div class="conversion-results" *ngIf="isProcessing || conversionComplete">
+    <div class="progress-tracker">
+      <div class="progress-step" [ngClass]="{'active': parseResults, 'complete': parseResults?.status === 'success'}">
+        <div class="step-indicator">1</div>
+        <div class="step-content">
+          <h5>Parse Figma JSON</h5>
+          <p *ngIf="parseResults">{{parseResults.message}}</p>
+          <div class="step-details" *ngIf="parseResults?.details">
+            <p>Identified {{parseResults.details.components}} UI components across {{parseResults.details.screens}} screens 
+               with {{parseResults.details.styles}} style definitions.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="progress-step" [ngClass]="{'active': analysisResults, 'complete': analysisResults?.status === 'success'}">
+        <div class="step-indicator">2</div>
+        <div class="step-content">
+          <h5>Analyze Component Structure</h5>
+          <p *ngIf="analysisResults">{{analysisResults.message}}</p>
+          <div class="step-details" *ngIf="analysisResults?.details">
+            <p>Detected {{analysisResults.details.layouts}} layout components, {{analysisResults.details.forms}} form controls,
+               {{analysisResults.details.buttons}} buttons, and {{analysisResults.details.cards}} card designs.</p>
+            <p>Identified {{analysisResults.details.patterns}} reusable design patterns.</p>
+            <button class="btn btn-secondary mt-2" (click)="downloadPdf()" *ngIf="analysisResults?.status === 'success'">
+              Download Component Analysis (PDF)
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="progress-step" [ngClass]="{'active': codeResults, 'complete': codeResults?.status === 'success'}">
+        <div class="step-indicator">3</div>
+        <div class="step-content">
+          <h5>Generate Angular Components</h5>
+          <p *ngIf="codeResults">{{codeResults.message}}</p>
+          <div class="step-details" *ngIf="codeResults?.details">
+            <p>Generated {{codeResults.details.components}} Angular components, {{codeResults.details.services}} services, 
+               {{codeResults.details.models}} data models, {{codeResults.details.pipes}} pipes, and {{codeResults.details.directives}} directives.</p>
+            <button class="btn btn-primary mt-2" (click)="downloadZip()" *ngIf="codeResults?.status === 'success'">
+              Download Angular Project (ZIP)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="conversion-actions mt-4" *ngIf="conversionComplete">
+      <button class="btn btn-secondary" (click)="resetForm()">
+        Start New Conversion
+      </button>
+    </div>
+  </div>
+</div>

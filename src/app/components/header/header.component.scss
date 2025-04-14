@@ -1,0 +1,55 @@
+.header {
+  background-color: var(--primary-red);
+  color: var(--white);
+  padding: 1.25rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo h1 {
+  font-size: 1.75rem;
+  margin: 0;
+  color: var(--white);
+  font-weight: 700;
+}
+
+.tagline {
+  font-size: 1rem;
+  color: var(--white);
+  margin: 0.2rem 0 0;
+  font-weight: 300;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+}
+
+.user-actions .btn {
+  padding: 0.6rem 1.25rem;
+  border-radius: 25px;
+  background-color: var(--white);
+  color: var(--primary-red);
+  font-weight: 600;
+  border: none;
+}
+
+.user-actions .btn:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .user-actions {
+    margin-top: 1rem;
+  }
+}
