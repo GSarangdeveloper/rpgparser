@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Exporter</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 10px;
+            margin: 0;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Ensure body takes full height */
+        }
+        #jsonOutput {
+            flex-grow: 1; /* Allow textarea to fill available space */
+            width: calc(100% - 12px); /* Account for padding/border */
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            border: 1px solid #ccc;
+            padding: 5px;
+            resize: none; /* Disable manual resize */
+        }
+        button {
+            padding: 8px 12px;
+            margin-top: 5px;
+            cursor: pointer;
+            border: 1px solid #bbb;
+            border-radius: 4px;
+            background-color: #eee;
+        }
+        button:hover {
+            background-color: #ddd;
+        }
+        button:active {
+            background-color: #ccc;
+        }
+        .button-row {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        #message {
+            margin-top: 5px;
+            font-size: 12px;
+            color: green;
+        }
+        #error {
+            margin-top: 5px;
+            font-size: 12px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <button id="generateButton">Generate JSON from Selection</button>
+
+    <textarea id="jsonOutput" readonly placeholder="Select a single Frame and click 'Generate JSON'..."></textarea>
+
+    <div class="button-row">
+        <button id="copyButton">Copy to Clipboard</button>
+    </div>
+    <div id="message"></div>
+    <div id="error"></div>
+
+    <script>
+        const generateButton = document.getElementById('generateButton');
+        const copyButton = document.getElementById('copyButton');
+        const jsonOutput = document.getElementById('jsonOutput');
+        const messageDiv = document.getElementById('message');
+        const errorDiv = document.getElementById('error');
+
+        generateButton.onclick = () => {
+            clearMessages();
+            jsonOutput.value = 'Generating...'; // Provide feedback
+            parent.postMessage({ pluginMessage: { type: 'generate-json' } }, '*');
+        }
+
+        copyButton.onclick = () => {
+            clearMessages();
+            const textToCopy = jsonOutput.value;
+            if (textToCopy && textToCopy !== 'Generating...') {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    messageDiv.textContent = 'Copied to clipboard!';
+                }).catch(err => {
+                    errorDiv.textContent = 'Failed to copy: ' + err;
+                });
+            } else {
+                 errorDiv.textContent = 'Nothing to copy.';
+            }
+        }
+
+        // Listen for messages from the plugin code (code.ts)
+        window.onmessage = (event) => {
+            const msg = event.data.pluginMessage;
+            if (msg) {
+                if (msg.type === 'json-generated') {
+                    jsonOutput.value = msg.data;
+                    clearMessages(); // Clear previous messages on success
+                } else if (msg.type === 'error') {
+                    jsonOutput.value = ''; // Clear output on error
+                    errorDiv.textContent = msg.message;
+                }
+            }
+        }
+
+        function clearMessages() {
+             messageDiv.textContent = '';
+             errorDiv.textContent = '';
+        }
+    </script>
+</body>
+</html>
