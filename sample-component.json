@@ -1,0 +1,103 @@
+{
+  "componentName": "UserProfileCard",
+  "description": "A user profile card component that displays a user's avatar, name, title, and a follow button.",
+  "rootElement": {
+    "name": "userProfileCard",
+    "tag": "div",
+    "styles": {
+      "display": "flex",
+      "flexDirection": "column",
+      "padding": "16px",
+      "borderRadius": "8px",
+      "boxShadow": "0 2px 4px rgba(0, 0, 0, 0.1)",
+      "maxWidth": "300px",
+      "fontFamily": "Arial, sans-serif"
+    },
+    "children": [
+      {
+        "name": "avatarSection",
+        "tag": "div",
+        "styles": {
+          "display": "flex",
+          "alignItems": "center",
+          "marginBottom": "16px"
+        },
+        "children": [
+          {
+            "name": "avatar",
+            "tag": "img",
+            "attributes": {
+              "src": "assets/images/user-avatar.jpg",
+              "alt": "User avatar"
+            },
+            "styles": {
+              "width": "64px",
+              "height": "64px",
+              "borderRadius": "50%",
+              "objectFit": "cover",
+              "marginRight": "16px"
+            }
+          },
+          {
+            "name": "userInfo",
+            "tag": "div",
+            "styles": {
+              "display": "flex",
+              "flexDirection": "column"
+            },
+            "children": [
+              {
+                "name": "userName",
+                "tag": "h3",
+                "content": "Jane Doe",
+                "styles": {
+                  "margin": "0 0 4px 0",
+                  "fontSize": "18px",
+                  "fontWeight": "600",
+                  "color": "#333"
+                }
+              },
+              {
+                "name": "userTitle",
+                "tag": "p",
+                "content": "Software Engineer",
+                "styles": {
+                  "margin": "0",
+                  "fontSize": "14px",
+                  "color": "#666"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "userBio",
+        "tag": "p",
+        "content": "Full-stack developer with a passion for creating beautiful, user-friendly applications.",
+        "styles": {
+          "margin": "0 0 16px 0",
+          "fontSize": "14px",
+          "lineHeight": "1.5",
+          "color": "#444"
+        }
+      },
+      {
+        "name": "followButton",
+        "tag": "button",
+        "content": "Follow",
+        "styles": {
+          "padding": "8px 16px",
+          "backgroundColor": "#3498db",
+          "color": "white",
+          "border": "none",
+          "borderRadius": "4px",
+          "fontSize": "14px",
+          "fontWeight": "500",
+          "cursor": "pointer",
+          "alignSelf": "flex-start"
+        }
+      }
+    ]
+  }
+}
